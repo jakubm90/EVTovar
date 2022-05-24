@@ -1,4 +1,5 @@
-﻿using EVTovar.Views;
+﻿using EVTovar.Services;
+using EVTovar.Views;
 using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -11,6 +12,8 @@ namespace EVTovar
         public App()
         {
             InitializeComponent();
+
+            DependencyService.Register<MockDataStore>();
             MainPage = new AppShell();
         }
 
