@@ -35,9 +35,15 @@ namespace EVTovar.ViewModels
             {
                 Items.Clear();
                 var items = await DataStore.GetItemsAsync(true);
+                var itemsy = await DatabaseStore.GetAllDataAsync<Item>();
                 foreach (var item in items)
                 {
                     Items.Add(item);
+                }
+
+                foreach (var item in itemsy)
+                {
+                    Debug.WriteLine(item.Name);
                 }
             }
             catch (Exception ex)

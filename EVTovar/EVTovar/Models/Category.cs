@@ -4,9 +4,8 @@ using System.Text;
 
 namespace EVTovar.Models
 {
-    public  class Category
+    public  class Category : BaseModel
     {
-        public int Id { get; set; }
         public string Name { get; set; }
     }
 }

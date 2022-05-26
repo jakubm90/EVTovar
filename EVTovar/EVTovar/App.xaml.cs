@@ -8,12 +8,27 @@ namespace EVTovar
 {
     public partial class App : Application
     {
+        static IDataService dataService;
+
+        public static IDataService DataService
+        {
+            get
+            {
+                if (dataService == null)
+                {
+                    dataService = new DataService();
+                }
+                return dataService;
+            }
+        }
 
         public App()
         {
             InitializeComponent();
 
+            //DependencyService.Register<DataService>();
             DependencyService.Register<MockDataStore>();
+
             MainPage = new AppShell();
         }
 

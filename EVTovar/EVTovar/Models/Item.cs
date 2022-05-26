@@ -4,10 +4,9 @@ using System.Text;
 
 namespace EVTovar.Models
 {
-    public class Item
+    public class Item : BaseModel
     {
-        public int Id { get; set; }
-        public string Manufacturer { get; set; }
+        public int ManufacturerID { get; set; }
         public int CategoryID { get; set; }
         public string Name { get; set; }
         public float Weight { get; set; }
