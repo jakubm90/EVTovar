@@ -12,15 +12,11 @@ namespace EVTovar.Services
 
         public MockDataStore()
         {
-            items = new List<Item>()
+            items = new List<Item>();
+            for (int i = 0; i < 40; i++)
             {
-                new Item { Id = 0, Name = "First item", Description="This is an item description." },
-                new Item { Id = 1, Name = "Second item", Description="This is an item description." },
-                new Item { Id = 2, Name = "Third item", Description="This is an item description." },
-                new Item { Id = 3, Name = "Fourth item", Description="This is an item description." },
-                new Item { Id = 4, Name = "Fifth item", Description="This is an item description." },
-                new Item { Id = 5, Name = "Sixth item", Description="This is an item description." }
-            };
+                items.Add(new Item { Id = i, Name = $"{i} item", Description = "This is an item description." });
+            }
         }
 
         public async Task<bool> AddItemAsync(Item item)
