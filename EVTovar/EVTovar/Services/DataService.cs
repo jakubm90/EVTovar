@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,18 +22,31 @@ namespace EVTovar.Services
             db = new SQLiteAsyncConnection(dbPath);
             db.DropTableAsync<Item>();
             db.CreateTableAsync<Item>().Wait();
-            db.CreateTableAsync<Category>().Wait();
-            
+
             //test
-            for (int i = 0; i < 10; i++) db.InsertAsync(new Item { Name = "TEST", Description = "Blablabla"}).Wait();
+            for (int i = 1; i <= 10; i++) db.InsertAsync(new Item { Name = "TEST", Description = "Blablabla"}).Wait();
+        }
+
+        public class FullItem
+        {
+            public string NameItem { get; set; }
+            public string CategoryName { get; set; }
+            public int idcko { get; set; }
+        }
+
+        public Task<List<T>> GetQueryAsync<T>(string query) where T : new()
+        {
+            //var items = db.QueryAsync<T>(@"SELECT I.Name as NameItem, I.Id as idcko, C.Name as CategoryName from Item I inner join Category C on I.CategoryID = C.Id order by I."+name+ " DESC", id);
+            var items = db.QueryAsync<T>(query);
+            return items;
         }
 
         public Task<List<T>> GetAllDataAsync<T>() where T : new()
         {
             return db.Table<T>().ToListAsync();
-        }
+        }      
 
-        public Task<T> GetDataAsync<T>(int id) where T : BaseModel, new()
+        public Task<T> GetDataByIdAsync<T>(int id) where T : BaseModel, new()
         {
             return db.Table<T>().Where(i => i.Id == id).FirstOrDefaultAsync();
         }

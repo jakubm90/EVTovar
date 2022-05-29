@@ -34,17 +34,20 @@ namespace EVTovar.ViewModels
             try
             {
                 Items.Clear();
-                var items = await DataStore.GetItemsAsync(true);
-                var itemsy = await DatabaseStore.GetAllDataAsync<Item>();
+                var items = await DataService.GetAllDataAsync<Item>();
                 foreach (var item in items)
                 {
                     Items.Add(item);
                 }
 
-                foreach (var item in itemsy)
+                //test2
+                var testItems = await DataService.GetQueryAsync<BaseItem>("SELECT I.Name as Name, I.Id as Id FROM Item I");
+                foreach (var item in testItems)
                 {
                     Debug.WriteLine(item.Name);
                 }
+
+
             }
             catch (Exception ex)
             {

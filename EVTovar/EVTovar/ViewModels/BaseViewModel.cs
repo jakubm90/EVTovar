@@ -10,9 +10,7 @@ namespace EVTovar.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        public IDataStore<Item> DataStore => DependencyService.Get<IDataStore<Item>>();
-        //public IDataService DatabaseStore => DependencyService.Get<IDataService>();
-        public IDataService DatabaseStore => App.DataService;
+        public IDataService DataService => App.DataService;
 
         bool isBusy = false;
         public bool IsBusy

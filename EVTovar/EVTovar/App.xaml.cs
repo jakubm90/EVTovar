@@ -26,9 +26,6 @@ namespace EVTovar
         {
             InitializeComponent();
 
-            //DependencyService.Register<DataService>();
-            DependencyService.Register<MockDataStore>();
-
             MainPage = new AppShell();
         }
 

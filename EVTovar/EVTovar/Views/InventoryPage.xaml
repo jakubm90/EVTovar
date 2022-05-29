@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EVTovar.Views.InventoryPage"
              xmlns:local="clr-namespace:EVTovar.ViewModels"  
-             xmlns:model="clr-namespace:EVTovar.Models"  
+             xmlns:model="clr-namespace:EVTovar.Models" 
+             x:DataType="local:InventoryViewModel"
              Title="Inventory Page">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Add" Command="{Binding AddItemCommand}" />
@@ -27,8 +28,8 @@
                         <Image Grid.RowSpan="2" 
                                Source="all.png" 
                                Aspect="AspectFill"
-                               HeightRequest="60" 
-                               WidthRequest="60" />
+                               HeightRequest="40" 
+                               WidthRequest="40" />
                         <Label Grid.Column="1" 
                                Text="{Binding Name}" 
                                FontAttributes="Bold" />
@@ -37,6 +38,10 @@
                                Text="{Binding Description}"
                                FontAttributes="Italic" 
                                VerticalOptions="End" />
+                        <Label Grid.Column="2" 
+                               HorizontalTextAlignment="End"
+                               Text="{Binding Name}" 
+                               FontAttributes="Bold" />
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
