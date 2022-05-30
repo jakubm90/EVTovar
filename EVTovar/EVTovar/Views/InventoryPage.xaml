@@ -17,6 +17,7 @@
                 SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
+                    <StackLayout>
                     <Grid Padding="10" x:DataType="model:BaseItem">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -48,8 +49,16 @@
                                Grid.Column="2" 
                                HorizontalTextAlignment="End"
                                Text="{Binding Stock}" 
-                               FontAttributes="Bold" />                        
+                               FontAttributes="Bold" />
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer 
+                                NumberOfTapsRequired="1"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:InventoryViewModel}}, Path=ItemTapped}"		
+                                CommandParameter="{Binding .}">
+                            </TapGestureRecognizer>
+                        </Grid.GestureRecognizers>
                     </Grid>
+                    </StackLayout>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>

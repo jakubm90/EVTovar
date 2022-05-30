@@ -62,7 +62,7 @@ namespace EVTovar.ViewModels
         public Command AddItemCommand { get; }
         public Command ShowOnlyInStockCommand { get; }
         public Command OrderByCommand { get; }
-        public Command<Item> ItemTapped { get; }
+        public Command<BaseItem> ItemTapped { get; }
 
         public InventoryViewModel()
         {
@@ -71,7 +71,7 @@ namespace EVTovar.ViewModels
 
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
 
-            ItemTapped = new Command<Item>(OnItemSelected);
+            ItemTapped = new Command<BaseItem>(OnItemSelected);
 
             ShowOnlyInStockCommand = new Command(() => OnlyInStockCheck = !OnlyInStockCheck);
 
@@ -144,8 +144,7 @@ namespace EVTovar.ViewModels
             if (item == null)
                 return;
 
-            // This will push the ItemDetailPage onto the navigation stack
-            //await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ItemId)}={item.Id}");
+            await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ItemId)}={item.Id}");
         }
     }
 }

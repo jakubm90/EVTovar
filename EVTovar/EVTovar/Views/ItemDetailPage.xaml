@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="EVTovar.Views.ItemDetailPage"
+             xmlns:local="clr-namespace:EVTovar.ViewModels"  
+             xmlns:model="clr-namespace:EVTovar.Models" 
+             x:DataType="local:ItemDetailViewModel"
+             Title="{Binding Title}">
+    
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="DELETE" Command="{Binding DeleteCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <StackLayout Spacing="20" Padding="15">
+        <Label Text="{Binding Item.Name}" FontSize="Large" />
+        
+        <BoxView HeightRequest="1" Color="RoyalBlue" />
+        <Image Grid.RowSpan="2" Source="all.png" HeightRequest="100"/>
+
+
+
+        <Label Text="{Binding ItemInfo}"  FontSize="Medium"/>
+        <Label Text="Description:" Margin="0, -20" FontSize="Medium"/>
+        <Label Text="{Binding Item.Description}" FontSize="Small"/>
+    </StackLayout>
+    
+</ContentPage>
