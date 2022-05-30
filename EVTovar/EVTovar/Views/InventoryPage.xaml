@@ -8,7 +8,7 @@
              Title="Inventory Page">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="{Binding InStockText,Mode=TwoWay}" Command="{Binding ShowOnlyInStockCommand}" />
-        <ToolbarItem Text="Add" Command="{Binding AddItemCommand}" />
+        <ToolbarItem Text="{Binding OrderByText,Mode=TwoWay}" Command="{Binding OrderByCommand}" />
     </ContentPage.ToolbarItems>
     
     <RefreshView x:DataType="local:InventoryViewModel" Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
