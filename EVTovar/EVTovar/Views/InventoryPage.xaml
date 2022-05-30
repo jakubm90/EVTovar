@@ -7,16 +7,17 @@
              x:DataType="local:InventoryViewModel"
              Title="Inventory Page">
     <ContentPage.ToolbarItems>
+        <ToolbarItem Text="{Binding InStockText,Mode=TwoWay}" Command="{Binding ShowOnlyInStockCommand}" />
         <ToolbarItem Text="Add" Command="{Binding AddItemCommand}" />
     </ContentPage.ToolbarItems>
     
     <RefreshView x:DataType="local:InventoryViewModel" Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
         <CollectionView x:Name="ItemsListView"
-                ItemsSource="{Binding Items}"
+                ItemsSource="{Binding BaseItems}"
                 SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Grid Padding="10" x:DataType="model:Item">
+                    <Grid Padding="10" x:DataType="model:BaseItem">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -38,10 +39,16 @@
                                Text="{Binding Description}"
                                FontAttributes="Italic" 
                                VerticalOptions="End" />
-                        <Label Grid.Column="2" 
+                        <Label Grid.Row="0"
+                               Grid.Column="2" 
                                HorizontalTextAlignment="End"
-                               Text="{Binding Name}" 
+                               Text="STOCK" 
                                FontAttributes="Bold" />
+                        <Label Grid.Row="1"
+                               Grid.Column="2" 
+                               HorizontalTextAlignment="End"
+                               Text="{Binding Stock}" 
+                               FontAttributes="Bold" />                        
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

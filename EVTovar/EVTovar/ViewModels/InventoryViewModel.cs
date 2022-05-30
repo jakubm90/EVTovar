@@ -11,20 +11,49 @@ namespace EVTovar.ViewModels
     {
         private Item _selectedItem;
 
-        public ObservableCollection<Item> Items { get; }
+        bool _onlyInStockCheck;
+        public bool OnlyInStockCheck
+        {
+            get { return _onlyInStockCheck; }
+            set 
+            { 
+                _onlyInStockCheck = value;
+                IsBusy = true;
+                InStockText = value ? "Show All" : "Show Only In Stock";
+            }
+        }
+
+        string _inStockText;
+        public string InStockText 
+        { 
+            get { return _inStockText; }
+            set
+            {
+                SetProperty(ref _inStockText, value);
+            }
+
+        }
+
+        public ObservableCollection<BaseItem> BaseItems { get; set; }
         public Command LoadItemsCommand { get; }
         public Command AddItemCommand { get; }
+        public Command ShowOnlyInStockCommand { get; }
         public Command<Item> ItemTapped { get; }
 
         public InventoryViewModel()
         {
             Title = "Browse";
-            Items = new ObservableCollection<Item>();
+            BaseItems = new ObservableCollection<BaseItem>();
+
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
 
             ItemTapped = new Command<Item>(OnItemSelected);
 
+            ShowOnlyInStockCommand = new Command(() => OnlyInStockCheck = !OnlyInStockCheck);
+
             AddItemCommand = new Command(OnAddItem);
+
+            OnlyInStockCheck = false;
         }
 
         async Task ExecuteLoadItemsCommand()
@@ -33,18 +62,17 @@ namespace EVTovar.ViewModels
 
             try
             {
-                Items.Clear();
-                var items = await DataService.GetAllDataAsync<Item>();
-                foreach (var item in items)
-                {
-                    Items.Add(item);
-                }
+                BaseItems.Clear();
+                string query = $"SELECT {nameof(BaseItem.Id)}, {nameof(BaseItem.Name)}, {nameof(BaseItem.Image)}, {nameof(BaseItem.Stock)}, {nameof(BaseItem.Description)} FROM Item ";
 
-                //test2
-                var testItems = await DataService.GetQueryAsync<BaseItem>("SELECT I.Name as Name, I.Id as Id FROM Item I");
-                foreach (var item in testItems)
+                if (OnlyInStockCheck) query += $" WHERE {nameof(BaseItem.Stock)} > 0";
+
+                var baseItems = await DataService.GetQueryAsync<BaseItem>(query);
+
+                foreach (var item in baseItems)
                 {
                     Debug.WriteLine(item.Name);
+                    BaseItems.Add(item);
                 }
 
 

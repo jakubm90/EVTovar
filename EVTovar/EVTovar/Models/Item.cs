@@ -10,7 +10,6 @@ namespace EVTovar.Models
         public DateTime Modified { get; set; }
         public float Weight { get; set; }
         public int Price { get; set; }
-        public string Note { get; set; }
 
     }
 }
