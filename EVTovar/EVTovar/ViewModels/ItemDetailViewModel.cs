@@ -9,7 +9,7 @@ namespace EVTovar.ViewModels
     [QueryProperty(nameof(ItemId), nameof(ItemId))]
     public class ItemDetailViewModel : BaseViewModel
     {        
-        private Item _item;
+
 
 
         private string _itemInfo;
@@ -19,6 +19,7 @@ namespace EVTovar.ViewModels
             set => SetProperty(ref _itemInfo, value);
         }
 
+        private Item _item;
         public Item Item
         {
             get => _item;

@@ -24,7 +24,7 @@ namespace EVTovar.Services
             db.CreateTableAsync<Item>().Wait();
 
             //test
-            for (int i = 1; i <= 10; i++) db.InsertAsync(new Item { Name = i+"TEST", Description = "BlablablaBla" }).Wait();
+            //for (int i = 1; i <= 25; i++) db.InsertAsync(new Item { Name = i+"TEST", Description = "BlablablaBla" }).Wait();
         }
 
         public class FullItem
