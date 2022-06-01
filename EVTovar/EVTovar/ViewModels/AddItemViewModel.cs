@@ -6,6 +6,7 @@ using Xamarin.Forms;
 using EVTovar.Models;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using EVTovar.Services;
 
 namespace EVTovar.ViewModels
 {
@@ -47,11 +48,13 @@ namespace EVTovar.ViewModels
 
         public Command SaveCommand { get; }
         public Command AddImageFromDiskCommand { get; }
+        public Command AddImageFromWebCommand { get; }
 
         public AddItemViewModel()
         {
             SaveCommand = new Command(SaveItem, ValidateSave);
             AddImageFromDiskCommand = new Command(async () => await AddImageFromDisk());
+            AddImageFromWebCommand = new Command(async () => await AddImageFromWeb());
             this.PropertyChanged += (_, __) => SaveCommand.ChangeCanExecute();
         }
 
@@ -73,8 +76,15 @@ namespace EVTovar.ViewModels
 
         private async Task AddImageFromDisk()
         {
-            string imagePath = await PickAndSaveImage();
+            string imagePath = await ImageService.PickAndSaveImage();
             if (imagePath != null) { Image = imagePath; }
+        }
+
+        private async Task AddImageFromWeb()
+        {
+            string adress = await App.Current.MainPage.DisplayPromptAsync("Add Image From Web", "Enter URL?");
+            bool exist = await ImageService.CheckWebURL(adress);
+            if (exist) { Image = adress; }
         }
 
         private async void SaveItem()
