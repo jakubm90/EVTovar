@@ -5,21 +5,12 @@ using System.Windows.Input;
 using Xamarin.Forms;
 using EVTovar.Models;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace EVTovar.ViewModels
 {
     public class AddItemViewModel : BaseViewModel
     {
-        //<Entry Text = "{Binding Item.Name, Mode=TwoWay}" FontSize="Medium" />
-        //<Label Text = "Description" FontSize="Medium" />
-        //<Editor Text = "{Binding Item.Description, Mode=TwoWay}" AutoSize="TextChanges" FontSize="Medium" Margin="0" />
-        //<Label Text = "Price" FontSize="Medium" />
-        //<Editor Text = "{Binding Item.Price, Mode=TwoWay}" AutoSize="TextChanges" FontSize="Medium" Margin="0" />
-        //<Label Text = "Weight" FontSize="Medium" />
-        //<Editor Text = "{Binding Item.Weight, Mode=TwoWay}" AutoSize="TextChanges" FontSize="Medium" Margin="0" />
-        //<Label Text = "In Stock" FontSize="Medium" />
-        //<Editor Text = "{Binding Item.Stock, Mode=TwoWay}" AutoSize="TextChanges" FontSize="Medium" Margin="0" />
-        //<Button Text = "Save" Command="{Binding SaveCommand}" HorizontalOptions="FillAndExpand"></Button>
 
         string _name, _description;
         int _weight, _stock;
@@ -55,11 +46,12 @@ namespace EVTovar.ViewModels
         }
 
         public Command SaveCommand { get; }
-        public Command CancelCommand { get; }
+        public Command AddImageFromDiskCommand { get; }
 
         public AddItemViewModel()
         {
             SaveCommand = new Command(SaveItem, ValidateSave);
+            AddImageFromDiskCommand = new Command(async () => await AddImageFromDisk());
             this.PropertyChanged += (_, __) => SaveCommand.ChangeCanExecute();
         }
 
@@ -71,12 +63,27 @@ namespace EVTovar.ViewModels
                 && !String.IsNullOrWhiteSpace(Description);
         }
 
+        private string _image;
+
+        public string Image 
+        {
+            get => _image;
+            set => SetProperty(ref _image, value);
+        }
+
+        private async Task AddImageFromDisk()
+        {
+            string imagePath = await PickAndSaveImage();
+            if (imagePath != null) { Image = imagePath; }
+        }
+
         private async void SaveItem()
         {
             Item item = new Item()
             {
                 Name = this.Name,
                 Modified = DateTime.Now,
+                Image = !String.IsNullOrWhiteSpace(this.Image) ? this.Image : "placeholder.png",
                 Price = this.Price,
                 Stock = this.Stock,
                 Weight = this.Weight,

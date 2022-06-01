@@ -19,6 +19,11 @@
             <Editor Text="{Binding Weight, Mode=TwoWay}" Keyboard="Numeric" AutoSize="TextChanges" FontSize="Medium" Margin="0" />
             <Label Text="In Stock" FontSize="Medium" />
             <Editor Text="{Binding Stock, Mode=TwoWay}" Keyboard="Numeric" AutoSize="TextChanges" FontSize="Medium" Margin="0" />
+
+            <Button Text="Add Image From Disk" Command="{Binding AddImageFromDiskCommand}"></Button>
+            <Image Grid.RowSpan="2" Source="{Binding Image}" HeightRequest="100"/>
+            
+
             <Button Text="Save" Command="{Binding SaveCommand}" HorizontalOptions="FillAndExpand"></Button>
         </StackLayout>
     </ContentPage.Content>
