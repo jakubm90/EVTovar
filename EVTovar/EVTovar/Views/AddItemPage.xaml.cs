@@ -13,10 +13,19 @@ namespace EVTovar.Views
     {
         public Item Item { get; set; }
 
+        AddItemViewModel _viewModel;
+
         public AddItemPage()
         {
             InitializeComponent();
-            BindingContext = new AddItemViewModel();
+            BindingContext = _viewModel = new AddItemViewModel();
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+
+            _viewModel.OnDisappearing();
         }
     }
 }

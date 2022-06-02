@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using EVTovar.Models;
+using System.IO;
 
 namespace EVTovar.ViewModels
 {
@@ -52,6 +53,8 @@ namespace EVTovar.ViewModels
             try
             {
                 await DataService.RemoveItemAsync(_item);
+                if (File.Exists(_item.Image))
+                    File.Delete(_item.Image);
             }
             catch
             {

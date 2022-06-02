@@ -7,6 +7,8 @@ using EVTovar.Models;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using EVTovar.Services;
+using System.IO;
+using Xamarin.Essentials;
 
 namespace EVTovar.ViewModels
 {
@@ -47,6 +49,7 @@ namespace EVTovar.ViewModels
         }
 
         public Command SaveCommand { get; }
+        public Command DeleteImageCommand { get; }
         public Command AddImageFromDiskCommand { get; }
         public Command AddImageFromWebCommand { get; }
 
@@ -61,7 +64,6 @@ namespace EVTovar.ViewModels
 
         private bool ValidateSave()
         {
-            Debug.WriteLine("ValidateSave");
             return !String.IsNullOrWhiteSpace(Name)
                 && !String.IsNullOrWhiteSpace(Description);
         }
@@ -74,21 +76,77 @@ namespace EVTovar.ViewModels
             set => SetProperty(ref _image, value);
         }
 
+        // Load image from disk/ web
+        enum SourceOfImage { None, File, Web }
+
+        SourceOfImage sourceOfImage;
+
+        ImageSource _imageSource;
+        public ImageSource DisplayImageSource
+        {
+            get { return _imageSource; }
+            set
+            {
+                SetProperty(ref _imageSource, value);
+            }
+        }
+
+        Stream stream;
+        FileResult imageFile;
+        string webAddress;
         private async Task AddImageFromDisk()
         {
-            string imagePath = await ImageService.PickAndSaveImage();
-            if (imagePath != null) { Image = imagePath; }
+            var fileResult = await ImageService.PickImage();
+
+            if (fileResult != null) imageFile = fileResult;
+            else return;
+
+            stream?.Dispose();
+            stream = await ImageService.StreamImage(imageFile);
+            if (stream != null) 
+            { 
+                DisplayImageSource = ImageSource.FromStream(() => stream);
+                sourceOfImage = SourceOfImage.File;
+            }
         }
 
         private async Task AddImageFromWeb()
         {
-            string adress = await App.Current.MainPage.DisplayPromptAsync("Add Image From Web", "Enter URL?");
-            bool exist = await ImageService.CheckWebURL(adress);
-            if (exist) { Image = adress; }
+            string adress = await App.Current.MainPage.DisplayPromptAsync("Add Image From Web", "Enter URL");
+            if (adress != null) 
+            {
+
+                bool exist = await ImageService.CheckWebURL(adress);
+                if (exist) 
+                {
+                    sourceOfImage = SourceOfImage.Web;
+                    stream?.Dispose();
+                    DisplayImageSource = ImageSource.FromUri(new Uri(adress));
+                    webAddress = adress; 
+                }
+                else
+                    await App.Current.MainPage.DisplayAlert("Error", "Not a valid URL!", "OK");
+            }
         }
 
+        /// <summary>
+        /// Save Item To Database
+        /// </summary>
         private async void SaveItem()
         {
+            switch (sourceOfImage)
+            {
+                case SourceOfImage.File:
+                    Image = await ImageService.SaveImageToFileAsync(imageFile);
+                    break;
+                case SourceOfImage.Web:
+                    Image = webAddress;
+                    break;
+                default:
+                    Image = null;
+                    break;
+            }
+
             Item item = new Item()
             {
                 Name = this.Name,
@@ -99,11 +157,14 @@ namespace EVTovar.ViewModels
                 Weight = this.Weight,
                 Description = this.Description
             };
-        
 
             await DataService.SaveItemAsync(item);
-
             await Shell.Current.GoToAsync("..");
+        }
+
+        public void OnDisappearing()
+        {
+            stream?.Dispose();
         }
     }
 }

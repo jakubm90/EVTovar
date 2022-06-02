@@ -1,6 +1,7 @@
 ﻿using EVTovar.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using System.Text;
@@ -89,5 +90,79 @@ namespace EVTovar.Services
 
             return response;
         }
+
+
+        public static async Task<FileResult> PickImage()
+        {
+            FileResult fileResult = null;
+
+            try
+            {
+                fileResult = await MediaPicker.PickPhotoAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            return fileResult;
+        }
+
+        public static async Task<Stream> StreamImage(FileResult file)
+        {
+
+            Stream stream = null;
+
+            try
+            {
+                stream = await LoadImageStreamAsync(file);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            return stream;
+        }
+
+        public static async Task<Stream> LoadImageStreamAsync(FileResult file)
+        {
+            Stream stream;
+            if (file == null)
+            {
+
+                stream = null;
+                return stream;
+            }
+
+            stream = await file.OpenReadAsync();
+            //ImageSourcer = ImageSource.FromUri(new Uri("https://i.redd.it/qi49ckp25ys01.png"));
+
+            return stream;
+
+        }
+
+        public static async Task<string> SaveImageToFileAsync(FileResult file)
+        {
+            string imagePath;
+            if (file == null)
+            {
+
+                imagePath = null;
+                return imagePath;
+            }
+
+            
+
+            var newFile = Path.Combine(FileSystem.AppDataDirectory, Guid.NewGuid() + file.FileName);
+            using (var stream = await file.OpenReadAsync())
+            using (var newStream = File.OpenWrite(newFile))
+                await stream.CopyToAsync(newStream);
+
+            imagePath = newFile;
+
+            return imagePath;
+        }
+
     }
 }

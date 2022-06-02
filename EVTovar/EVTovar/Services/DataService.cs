@@ -20,7 +20,7 @@ namespace EVTovar.Services
         {
             string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MyData.db");
             db = new SQLiteAsyncConnection(dbPath);
-            db.DropTableAsync<Item>();
+            //db.DropTableAsync<Item>();
             db.CreateTableAsync<Item>().Wait();
 
             //test
