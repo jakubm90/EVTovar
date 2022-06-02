@@ -60,13 +60,14 @@ namespace EVTovar.Services
             return imagePath;
         }
 
-        public static async Task<bool> CheckImagePath(string imagePath)
+        public enum SourceOfImage { None, File, Web }
+        public static async Task<SourceOfImage> CheckImagePath(string imagePath)
         {
-            if (String.IsNullOrWhiteSpace(imagePath)) return false;
+            if (String.IsNullOrWhiteSpace(imagePath)) return SourceOfImage.None;
 
-            if (File.Exists(imagePath)) return true;
-            else if (await CheckWebURL(imagePath)) return true;
-            else return false;
+            if (File.Exists(imagePath)) return SourceOfImage.File;
+            else if (await CheckWebURL(imagePath)) return SourceOfImage.Web;
+            else return SourceOfImage.None;
         }
 
         public static async Task<bool> CheckWebURL(string url)

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using EVTovar.Models;
 using System.IO;
+using EVTovar.Views;
 
 namespace EVTovar.ViewModels
 {
@@ -42,10 +43,12 @@ namespace EVTovar.ViewModels
         }
 
         public Command DeleteCommand { get; }
+        public Command EditCommand { get; }
 
         public ItemDetailViewModel()
         {
             DeleteCommand = new Command(async () => await RemoveItem());
+            EditCommand = new Command(async () => await EditItem());
         }
 
         async Task RemoveItem()
@@ -62,6 +65,11 @@ namespace EVTovar.ViewModels
             }
 
             await Shell.Current.GoToAsync("..");
+        }
+
+        async Task EditItem()
+        {
+            await Shell.Current.GoToAsync($"{nameof(EditItemPage)}?{nameof(EditItemViewModel.ItemId)}={ItemId}");
         }
 
         public async void GetItemById(int Id)

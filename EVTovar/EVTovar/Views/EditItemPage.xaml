@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:EVTovar.ViewModels"  
              xmlns:model="clr-namespace:EVTovar.Models" 
-             x:DataType="local:AddItemViewModel"
-             x:Class="EVTovar.Views.AddItemPage"
+             x:DataType="local:EditItemViewModel"
+             x:Class="EVTovar.Views.EditItemPage"
              Title="Add Item">
     <ContentPage.Content>
         <ScrollView >
@@ -22,12 +22,12 @@
 
                 <Button Text="Add Image From Web" Command="{Binding AddImageFromWebCommand}"></Button>
                 <Button Text="Add Image From Disk" Command="{Binding AddImageFromDiskCommand}"></Button>
-                <Image Source="{Binding DisplayImageSource}" HeightRequest="300"/>
-            
+                <Image Grid.RowSpan="2" Source="{Binding DisplayImageSource}" HeightRequest="100"/>
 
-                <Button Text="Save" Command="{Binding SaveCommand}" HorizontalOptions="FillAndExpand"></Button>
+
+                <Button Text="Update" Command="{Binding SaveCommand}" HorizontalOptions="FillAndExpand"></Button>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>
-    
+
 </ContentPage>

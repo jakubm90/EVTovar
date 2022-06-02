@@ -13,6 +13,7 @@ namespace EVTovar
 
             Routing.RegisterRoute(nameof(ItemDetailPage), typeof(ItemDetailPage));
             Routing.RegisterRoute(nameof(AddItemPage), typeof(AddItemPage));
+            Routing.RegisterRoute(nameof(EditItemPage), typeof(EditItemPage));
         }
 
     }

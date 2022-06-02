@@ -77,11 +77,11 @@ namespace EVTovar.ViewModels
         }
 
         // Load image from disk/ web
-        enum SourceOfImage { None, File, Web }
 
-        SourceOfImage sourceOfImage;
+        protected ImageService.SourceOfImage sourceOfImage;
+        protected bool imageWasModified;
 
-        ImageSource _imageSource;
+        protected ImageSource _imageSource;
         public ImageSource DisplayImageSource
         {
             get { return _imageSource; }
@@ -91,10 +91,10 @@ namespace EVTovar.ViewModels
             }
         }
 
-        Stream stream;
-        FileResult imageFile;
-        string webAddress;
-        private async Task AddImageFromDisk()
+        protected Stream stream;
+        protected FileResult imageFile;
+        protected string webAddress;
+        protected async Task AddImageFromDisk()
         {
             var fileResult = await ImageService.PickImage();
 
@@ -104,13 +104,14 @@ namespace EVTovar.ViewModels
             stream?.Dispose();
             stream = await ImageService.StreamImage(imageFile);
             if (stream != null) 
-            { 
+            {
+                imageWasModified = true;
                 DisplayImageSource = ImageSource.FromStream(() => stream);
-                sourceOfImage = SourceOfImage.File;
+                sourceOfImage = ImageService.SourceOfImage.File;
             }
         }
 
-        private async Task AddImageFromWeb()
+        protected async virtual Task AddImageFromWeb()
         {
             string adress = await App.Current.MainPage.DisplayPromptAsync("Add Image From Web", "Enter URL");
             if (adress != null) 
@@ -119,10 +120,11 @@ namespace EVTovar.ViewModels
                 bool exist = await ImageService.CheckWebURL(adress);
                 if (exist) 
                 {
-                    sourceOfImage = SourceOfImage.Web;
+                    sourceOfImage = ImageService.SourceOfImage.Web;
                     stream?.Dispose();
                     DisplayImageSource = ImageSource.FromUri(new Uri(adress));
-                    webAddress = adress; 
+                    webAddress = adress;
+                    imageWasModified = true;
                 }
                 else
                     await App.Current.MainPage.DisplayAlert("Error", "Not a valid URL!", "OK");
@@ -132,14 +134,14 @@ namespace EVTovar.ViewModels
         /// <summary>
         /// Save Item To Database
         /// </summary>
-        private async void SaveItem()
+        protected async virtual void SaveItem()
         {
             switch (sourceOfImage)
             {
-                case SourceOfImage.File:
+                case ImageService.SourceOfImage.File:
                     Image = await ImageService.SaveImageToFileAsync(imageFile);
                     break;
-                case SourceOfImage.Web:
+                case ImageService.SourceOfImage.Web:
                     Image = webAddress;
                     break;
                 default:
